@@ -24,7 +24,7 @@ if os.path.exists(version_file):
 __version__ = about.get("__version__", "0.0.0")
 
 setup(
-    name="xqr",
+    name="xqr-z",
     version=__version__,
     description="高性能二维码生成与解码库（numpy 加速，支持中文）",
     long_description=long_description,

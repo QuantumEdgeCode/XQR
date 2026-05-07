@@ -1,1 +1,578 @@
-# log
+# XQR —— 高性能二维码生成与解码库
+
+<div align="center">
+
+<p>
+  <img src="assets/demo_basic.png" width="200" alt="XQR 二维码"/>
+</p>
+
+![XQR](https://img.shields.io/badge/XQR-v1.0.1-blue)
+![Python](https://img.shields.io/badge/Python-3.6+-green)
+![License](https://img.shields.io/badge/License-MIT-orange)
+
+<h3>生成 · 解码 · 艺术 · 动态 · 中文 · 条形码</h3>
+
+**XQR** 是一个高性能 Python 二维码库。
+使用 **numpy 加速** 图像处理，艺术二维码生成速度比 MyQR **快 10-100 倍**。
+
+**完全支持中文内容的编码和解码，自带 Code128 条形码生成与解码引擎。**
+
+</div>
+
+---
+
+## 📸 功能预览
+
+### 多种颜色风格
+
+| 基础黑白 | 微信绿 | 支付宝蓝 | 红色主题 |
+|:---:|:---:|:---:|:---:|
+| ![基础](assets/demo_basic.png) | ![微信绿](assets/demo_wechat.png) | ![支付宝蓝](assets/demo_alipay.png) | ![红色主题](assets/demo_red.png) |
+| 经典黑白 | 品牌色示例 | 品牌色示例 | 自定义颜色 |
+
+### 艺术二维码效果
+
+| 原始背景 | 黑白艺术 | 彩色艺术 |
+|:---:|:---:|:---:|
+| ![背景](assets/bg_gradient.png) | ![黑白艺术](assets/demo_art_bw.png) | ![彩色艺术](assets/demo_art_color.png) |
+| 渐变背景 | 黑白融合效果 | 彩色融合效果 |
+
+### 动态二维码（GIF 预览）
+
+<p align="center">
+  <img src="assets/demo_animated.gif" width="200" alt="动态二维码"/>
+  <br>
+  <sub>扫码时背景会动起来</sub>
+</p>
+
+### 透明背景与叠加效果
+
+| 透明二维码 | 叠加在背景上 |
+|:---:|:---:|
+| ![透明](assets/demo_transparent.png) | ![叠加](assets/demo_overlay.png) |
+| PNG 透明背景 | 可叠加到海报/设计稿 |
+
+---
+
+## 📖 目录
+
+- [快速安装](#-快速安装)
+- [一分钟上手](#-一分钟上手)
+- [功能详解](#-功能详解)
+- [条形码](#-条形码)
+- [示例代码](#-示例代码)
+- [命令行](#-命令行)
+- [API 参考](#-api-参考)
+- [性能对比](#-性能对比)
+- [完整示例](#-完整示例)
+
+---
+
+## 📦 快速安装
+
+```bash
+pip install xqr                   # 全功能推荐，开箱即用
+```
+
+> **轻量安装**（仅生成、不需要识别解码，省掉 opencv-python）：
+> ```bash
+> pip install Pillow numpy
+> ```
+>
+> 条形码**生成与解码**已内置（零外部依赖），无需额外安装。
+> Web 应用需要 Flask：`pip install flask`
+
+---
+
+## 🚀 一分钟上手
+
+### 终端快捷命令（最简单）
+
+```bash
+# 直接传内容，一行生成二维码
+xqr "https://github.com"
+xqr "你好世界"
+xqr "数据" -o myqr.png       # 保存到文件
+xqr "数据" --terminal        # 终端打印（手机可扫）
+```
+
+### Python 生成二维码
+
+```python
+from xqr import encode
+
+# ↓↓↓ 最简单的用法 ↓↓↓
+encode("https://github.com", "github.png")
+
+# ↓↓↓ 中文也一样 ↓↓↓
+encode("你好世界", "hello.png")
+
+# ↓↓↓ 直接获取 PIL 图片对象 ↓↓↓
+img = encode("Hello World")
+img.show()
+
+# ↓↓↓ 自定义颜色 ↓↓↓
+encode("彩色二维码", "color.png", fill_color="#FF6B35", back_color="white")
+```
+
+### 解码二维码
+
+```python
+from xqr import decode
+
+# ↓↓↓ 从图片文件解码 ↓↓↓
+text = decode("github.png")
+print(text)  # 输出: https://github.com
+
+# ↓↓↓ 从 PIL Image 解码 ↓↓↓
+from PIL import Image
+img = Image.open("github.png")
+text = decode(img)
+
+# ↓↓↓ 从 OpenCV 数组解码 ↓↓↓
+import cv2
+arr = cv2.imread("github.png")
+text = decode(arr)
+```
+
+---
+
+## 🎨 功能详解
+
+### 1️⃣ 艺术二维码
+
+将二维码与背景图片融合，美观且可扫码识别。
+
+```python
+# 黑白艺术二维码
+encode("https://example.com", "art_bw.png",
+       picture="background.jpg")
+
+# 彩色艺术二维码
+encode("https://example.com", "art_color.png",
+       picture="background.jpg", colorized=True)
+
+# 调整对比度和亮度
+encode("https://example.com", "art_adj.png",
+       picture="background.jpg", colorized=True,
+       contrast=1.5, brightness=0.8)
+```
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `picture` | 背景图片路径 | `None` |
+| `colorized` | 是否彩色 | `False`（黑白） |
+| `contrast` | 对比度（越小越淡） | `1.0` |
+| `brightness` | 亮度（越小越暗） | `1.0` |
+
+### 2️⃣ 动态二维码（GIF）
+
+从 GIF 动画生成动态二维码，扫码时背景会动起来。
+
+```python
+# 从动态 GIF 生成动态二维码
+encode("https://example.com", "animated.gif",
+       picture="animation.gif", colorized=True)
+```
+
+<p align="center">
+  <img src="assets/demo_animated.gif" width="150" alt="动态二维码演示"/>
+</p>
+
+### 3️⃣ 自定义颜色
+
+适合品牌个性化场景。
+
+```python
+# 品牌色：微信绿
+encode("https://weixin.qq.com", "wechat.png",
+       fill_color="#07C160", back_color="white")
+
+# 品牌色：支付宝蓝
+encode("https://www.alipay.com", "alipay.png",
+       fill_color="#1677FF", back_color="white")
+
+# 透明背景（叠加到海报上）
+encode("https://example.com", "transparent.png",
+       fill_color="black", back_color="transparent")
+```
+
+### 4️⃣ 终端输出
+
+无需图形界面，终端直接打印二维码。使用 Unicode 方块字符在等宽终端中绘制，
+**手机扫码应用可以直接扫描**。
+
+```python
+encode("https://github.com", terminal=True)
+encode("你好世界", terminal=True)
+```
+
+<p align="center">
+  <img src="assets/demo_terminal.png" width="300" alt="终端二维码截图"/>
+  <br>
+  <sub>在 Windows Terminal / iTerm2 中等宽终端中显示为正确二维码</sub>
+</p>
+
+> ⚠️ 注意：终端二维码仅在**真实等宽终端**中显示正确。
+> Markdown 渲染的字符间距会破坏二维码结构，请在实际终端中运行查看效果。
+
+### 5️⃣ Base64 / SVG 输出
+
+适用于 Web 开发，无需生成临时文件。
+
+```python
+# Base64 数据 URI（可直接用于 HTML img 标签）
+b64 = encode("https://github.com", base64=True)
+# → data:image/png;base64,iVBORw0KGgo...
+
+# SVG 矢量图（无限缩放不模糊）
+svg = encode("https://github.com", svg=True)
+# → <?xml version='1.0' encoding='UTF-8'?>...
+```
+
+### 6️⃣ 二维码解码
+
+支持多种输入源和预处理策略，确保高识别率。
+
+```python
+from xqr import decode, XQR
+
+# 四种解码方式，效果相同
+decode("qrcode.png")          # ① 文件路径
+decode(Image.open("qr.png"))  # ② PIL Image
+decode(cv2.imread("qr.png"))  # ③ OpenCV 数组
+XQR.decode("qrcode.png")      # ④ 类方法
+```
+
+**解码引擎（纯 OpenCV 原生实现，无需 pyzbar 等外部依赖）：**
+
+| 优先级 | 方法 | 适用场景 |
+|--------|------|----------|
+| 1 | OpenCV QRCodeDetector | 标准二维码 |
+| 2 | 图像放大 2-4x | 小型二维码 |
+| 3 | CLAHE 增强对比度 | 低对比度图像 |
+| 4 | 高斯模糊 + 二值化 | **中文短文本（v1）** |
+| 5 | 简单二值化 | 基础黑白图像 |
+| 6 | OpenCV detectAndDecodeMulti | **多二维码同时检测** |
+
+### 7️⃣ 条形码生成与解码
+
+XQR 内置完整的 **Code128B 条形码引擎**——编码器和解码器均为自研实现，**零外部依赖**。
+
+<p align="center">
+  <img src="assets/demo_barcode.png" width="500" alt="XQR 条形码演示"/>
+  <br>
+  <sub>Code128 条形码示例（module_width=3, module_height=80）</sub>
+</p>
+
+**生成条形码：**
+
+```python
+from xqr.barcode import encode
+
+# 最基本用法 — 一行代码生成条码
+encode("Hello Barcode", "barcode.png")
+
+# 自定义粗细和高度
+encode("ABC-12345", "code128.png",
+       module_width=3,      # 每个条模块的像素宽度（默认 2）
+       module_height=80,    # 条码高度（默认 60）
+       quiet_zone=12)       # 左右白边宽度（默认 10）
+
+# 不显示下方的文字
+encode("数据", "bar.png", write_text=False)
+
+# 返回 PNG bytes（不保存文件）
+img_bytes = encode("Hello")
+# img_bytes 可直接嵌入 HTML / 数据库
+```
+
+**解码条形码：**
+
+```python
+from xqr.barcode import decode  # 条形码专用解码
+
+# 从文件解码
+text = decode("barcode.png")
+print(text)  # 输出: Hello Barcode
+
+# 从 PIL Image 解码
+from PIL import Image
+img = Image.open("barcode.png")
+text = decode(img)
+
+# CLI 不需要区分类型 — 自动识别
+# xqr decode barcode.png
+```
+
+**解码引擎（双重保障）：**
+
+| 引擎 | 原理 | 适用 |
+|------|------|------|
+| OpenCV BarcodeDetector | 深度学习模型 | 商品条码（EAN-13/UPC-A 等） |
+| 自研宽度归一化匹配 | 像素扫描 + 图案匹配 | **Code128 条码**（不受 OpenCV 兼容性限制） |
+
+**CLI 用法：**
+
+```bash
+# 生成条形码（默认 Code128）
+xqr barcode "Hello World" -o barcode.png
+
+# 自定义粗细
+xqr barcode "数据" -o bar.png \
+    --module-width 4 \      # 条宽（像素）
+    --module-height 100 \   # 条高
+    --no-text               # 不显示文字
+
+# 解码（自动识别 QR / 条形码）
+xqr decode barcode.png
+```
+
+> 条形码引擎已内置在 `xqr/barcode.py` 中，无需安装任何额外包。
+
+### 8️⃣ XQR 类接口
+
+需要精细控制时使用类接口。
+
+```python
+from xqr import XQR, ERROR_CORRECT_H
+
+# 创建实例
+qr = XQR(
+    data="https://example.com",
+    version=5,                # 固定版本
+    level=ERROR_CORRECT_H,    # 最高纠错
+    box_size=10,              # 模块像素大小
+    border=4,                 # 边框宽度
+)
+
+# 生成矩阵
+qr.make()
+
+# 输出
+qr.save("output.png")         # 保存文件
+qr.to_image()                 # 获取 PIL Image
+qr.to_terminal()              # 终端打印
+qr.to_base64()                # Base64 编码
+qr.to_svg()                   # SVG 矢量图
+qr.to_artistic("bg.jpg")      # 艺术融合
+
+# 获取二维码元数据
+print(qr.version)             # 版本号
+print(qr.modules_count)       # 模块数
+print(qr.get_matrix())        # 布尔矩阵
+```
+
+---
+
+## 💻 命令行
+
+```bash
+# ── 版本 ──────────────────────────────────────
+xqr --version        # 查看版本号
+xqr -V               # 简写
+
+# ── 快捷生成（简写，自动识别为 encode）───────
+# 无需子命令，直接写数据就行！
+xqr "https://github.com"              # 生成二维码（默认编码）
+xqr "https://github.com" output.png   # 保存到文件
+xqr "你好世界" --terminal              # 终端输出
+xqr "数据" -l H                        # 指定纠错等级
+xqr "数据" --fill-color "#FF6B35"     # 自定义颜色
+xqr "数据" -p bg.jpg -c               # 艺术二维码
+
+# ── 完整语法 ──────────────────────────────────
+xqr encode "Hello World" output.png
+xqr encode "https://example.com" -p bg.jpg -c -o art.png
+xqr encode "你好世界" output.png
+
+# ── 条形码 ──────────────────────────────────
+xqr barcode "Hello" -o bar.png     # 生成条形码（Code128）
+xqr barcode "数据" --module-width 4 # 自定义粗细（像素）
+xqr barcode "数据" --no-text        # 不带文字
+xqr barcode "数据" --module-height 100 # 调高
+xqr decode bar.png                 # 解码（自动识别类型）
+
+# ── 解码（自动识别 QR / 条形码）──────────
+xqr decode input.png
+
+# ── 帮助 ──────────────────────────────────────
+xqr --help
+xqr -help              # CMD 兼容
+xqr -h                 # 简写
+xqr encode --help
+xqr decode --help
+```
+
+### 命令行参数
+
+**全局参数：**
+
+| 参数 | 说明 |
+|------|------|
+| `--version` / `-V` | 显示版本号 |
+
+**encode 子命令参数：**
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `data` | 要编码的数据 | **必填** |
+| `output` | 输出文件路径 | 可选 |
+| `-v` / `--version` | 二维码版本 1-40 | 自动 |
+| `-l` / `--level` | 纠错等级 L/M/Q/H | M |
+| `-p` / `--picture` | 背景图片路径 | 无 |
+| `-c` / `--colorized` | 彩色艺术输出 | False |
+| `--contrast` | 对比度 | 1.0 |
+| `--brightness` | 亮度 | 1.0 |
+| `-t` / `--terminal` | 终端输出 | False |
+| `--fill-color` | 填充色 | black |
+| `--back-color` | 背景色 | white |
+| `--box-size` | 模块像素大小 | 10 |
+| `--border` | 边框宽度 | 4 |
+
+**barcode 子命令参数：**
+
+| 参数 | 说明 | 默认值 |
+|------|------|--------|
+| `data` | 要编码的数据 | **必填** |
+| `-o` / `--output` | 输出文件路径 | 可选 |
+| `--type` | 条形码类型 | code128 |
+| `--module-width` | 条宽（像素） | 3 |
+| `--module-height` | 条高（像素） | 80 |
+| `--no-text` | 不显示下方文字 | False |
+
+---
+
+## 📋 API 参考
+
+### `encode(data, save_path=None, ...)`
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `data` | str / bytes | — | 要编码的数据（支持中文） |
+| `save_path` | str / None | None | 保存路径（None 返回 PIL Image） |
+| `version` | int / None | None | 版本 1-40（None = 自动） |
+| `level` | str | `'M'` | 纠错等级 L/M/Q/H |
+| `box_size` | int | 10 | 每个模块像素大小 |
+| `border` | int | 4 | 边框宽度（模块数） |
+| `picture` | str / None | None | 艺术二维码背景图路径 |
+| `colorized` | bool | False | 是否彩色艺术输出 |
+| `contrast` | float | 1.0 | 对比度调整 |
+| `brightness` | float | 1.0 | 亮度调整 |
+| `fill_color` | str / tuple | `'black'` | 深色模块颜色 |
+| `back_color` | str / tuple | `'white'` | 浅色模块颜色 |
+| `terminal` | bool | False | 终端打印 |
+| `base64` | bool | False | 返回 Base64 数据 URI |
+| `svg` | bool | False | 返回 SVG 字符串 |
+
+**返回值：** PIL Image / str / None（取决于参数）
+
+### `decode(image, multiple=False)`
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `image` | str / PIL.Image / np.ndarray | — | 二维码图像 |
+| `multiple` | bool | False | 解码多个二维码（原生支持） |
+
+**返回值：** str（解码文本）或 list（multiple=True）
+
+### `XQR` 类
+
+| 方法 | 说明 |
+|------|------|
+| `__init__(data, version, level, ...)` | 创建实例 |
+| `add_data(data)` | 添加数据 |
+| `make(fit=True)` | 生成二维码矩阵 |
+| `to_image(fill_color, back_color)` | 获取 PIL Image |
+| `save(path, ...)` | 保存到文件 |
+| `to_terminal(out, tty, invert)` | 终端打印 |
+| `to_base64(fill_color, back_color, format)` | Base64 编码 |
+| `to_svg(fill_color, back_color)` | SVG 输出 |
+| `to_artistic(picture, ...)` | 艺术融合 |
+| `get_matrix()` | 获取布尔矩阵 |
+| `decode(image, multiple)` | **静态方法** 解码 |
+
+### `xqr.barcode.encode(data, save_path=None, ...)`
+
+| 参数 | 类型 | 默认值 | 说明 |
+|------|------|--------|------|
+| `data` | str | — | 要编码的数据（ASCII 32-126） |
+| `save_path` | str / None | None | 保存路径（None 返回 PNG bytes） |
+| `module_width` | int | 2 | 每个模块的像素宽度 |
+| `module_height` | int | 60 | 条形码高度 |
+| `quiet_zone` | int | 10 | 左右白边宽度 |
+| `write_text` | bool | True | 是否在条码下方显示文字 |
+| `bar_color` | str | black | 条形码颜色 |
+| `bg_color` | str | white | 背景色 |
+
+**返回值：** bytes（PNG）或 str（保存路径）
+
+### `xqr.barcode.decode(image, multiple=False)`
+
+同 `xqr.decode` 参数结构。返回解码文本字符串。
+
+---
+
+## ⚡ 性能对比
+
+| 操作 | MyQR | XQR | 加速比 |
+|------|------|-----|--------|
+| 艺术二维码（黑白） | ~50 ms | ~3 ms | **~16x** |
+| 艺术二维码（彩色） | ~55 ms | ~3 ms | **~18x** |
+| 动态 GIF（10帧） | ~550 ms | ~35 ms | **~15x** |
+| 基础二维码 | ~5 ms | ~0.5 ms | **~10x** |
+
+*测试环境：Python 3.11, 256×256 背景图片*
+
+**加速原理：** MyQR 使用 Python 逐像素 `putpixel()` 循环，
+XQR 使用 numpy 向量化数组操作，批量处理所有像素。
+
+---
+
+## 📁 完整示例
+
+项目中 `examples/` 目录包含完整的示例脚本：
+
+| 示例 | 文件 | 说明 |
+|------|------|------|
+| 1️⃣ | `01_basic_encode.py` | 基本二维码生成 |
+| 2️⃣ | `02_basic_decode.py` | 二维码解码（4种方式） |
+| 3️⃣ | `03_custom_colors.py` | 自定义颜色（品牌色、透明） |
+| 4️⃣ | `04_artistic_qr.py` | 艺术二维码（多种背景） |
+| 5️⃣ | `05_animated_qr.py` | 动态 GIF 二维码 |
+| 6️⃣ | `06_terminal_output.py` | 终端输出 |
+| 7️⃣ | `07_base64_svg.py` | Base64/SVG 输出 |
+| 8️⃣ | `08_class_api.py` | 类接口完整使用 |
+| 9️⃣ | `09_chinese_text.py` | 中文编解码全方位测试 |
+| 🔟 | `10_batch_encode.py` | 批量生成与高级应用 |
+| 🔧 | `11_cli_usage.sh` | 命令行完整用法 |
+| 🔲 | `12_barcode.py` | **条形码生成与解码**（Code128，零外部依赖） |
+| 🌐 | `app.py` | **Web 应用 v1** — 二维码生成与扫码识别（Flask） |
+| 🌐 | `app_v2.py` | **Web 应用 v2** — 二维码 & 条形码生成与识别（Flask） |
+
+运行示例：
+
+```bash
+cd examples/
+python 01_basic_encode.py
+python 02_basic_decode.py
+# ...
+bash 11_cli_usage.sh
+python 12_barcode.py
+
+# 启动 Web 应用（QR 码 + 条形码）
+pip install flask          # 首次需安装 Flask
+python app.py              # → http://localhost:5000
+```
+
+---
+
+## 📄 许可证
+
+MIT License
+
+---
+
+<div align="center">
+<sub>Made with ❤️ by <b>Deepseek-V4-Flash</b> & <b>江城庄稼汉</b> · MyQR 的重构版，用 numpy 加速</sub>
+</div>

@@ -1,0 +1,2 @@
+[console_scripts]
+xqr = xqr.cli:main

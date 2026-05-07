@@ -1,0 +1,9 @@
+# XQR 运行时依赖（与 pyproject.toml 同步）
+Pillow>=8.0
+numpy>=1.17
+opencv-python>=4.5
+
+# 可选依赖
+# flask          — Web 应用（examples/app.py）
+# qrcode[pil]    — SVG 输出（仅 svg extra）
+# pytest         — 测试（dev extra）

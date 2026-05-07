@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "xqr"
+dynamic = ["version"]
+description = "高性能二维码生成与解码库（numpy 加速，支持中文、条形码）"
+readme = "README.md"
+requires-python = ">=3.8"
+license = "MIT"
+authors = [
+    {name = "Deepseek-V4-Flash · 江城庄稼汉"},
+]
+keywords = ["qrcode", "qr", "二维码", "barcode", "条形码"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "Pillow>=8.0",
+    "numpy>=1.17",
+    "opencv-python>=4.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+svg = ["qrcode[pil]"]
+
+[project.urls]
+Homepage = "https://github.com/QuantumEdgeCode/xqr"
+Source = "https://github.com/QuantumEdgeCode/xqr"
+"Bug Reports" = "https://github.com/QuantumEdgeCode/xqr/issues"
+
+[project.scripts]
+xqr = "xqr.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["xqr*"]
+
+[tool.setuptools.dynamic]
+version = {attr = "xqr._version.__version__"}

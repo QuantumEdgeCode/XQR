@@ -27,20 +27,20 @@
 
 | 基础黑白 | 微信绿 | 支付宝蓝 | 红色主题 |
 |:---:|:---:|:---:|:---:|
-| ![基础](assets/demo_basic.png) | ![微信绿](assets/demo_wechat.png) | ![支付宝蓝](assets/demo_alipay.png) | ![红色主题](assets/demo_red.png) |
+| ![基础](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_basic.png) | ![微信绿](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_wechat.png) | ![支付宝蓝](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_alipay.png) | ![红色主题](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_red.png) |
 | 经典黑白 | 品牌色示例 | 品牌色示例 | 自定义颜色 |
 
 ### 艺术二维码效果
 
 | 原始背景 | 黑白艺术 | 彩色艺术 |
 |:---:|:---:|:---:|
-| ![背景](assets/bg_gradient.png) | ![黑白艺术](assets/demo_art_bw.png) | ![彩色艺术](assets/demo_art_color.png) |
+| ![背景](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/bg_gradient.png) | ![黑白艺术](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_art_bw.png) | ![彩色艺术](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_art_color.png) |
 | 渐变背景 | 黑白融合效果 | 彩色融合效果 |
 
 ### 动态二维码（GIF 预览）
 
 <p align="center">
-  <img src="assets/demo_animated.gif" width="200" alt="动态二维码"/>
+  <img src="https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_animated.gif" width="200" alt="动态二维码"/>
   <br>
   <sub>扫码时背景会动起来</sub>
 </p>
@@ -49,7 +49,7 @@
 
 | 透明二维码 | 叠加在背景上 |
 |:---:|:---:|
-| ![透明](assets/demo_transparent.png) | ![叠加](assets/demo_overlay.png) |
+| ![透明](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_transparent.png) | ![叠加](https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_overlay.png) |
 | PNG 透明背景 | 可叠加到海报/设计稿 |
 
 ---
@@ -71,7 +71,7 @@
 ## 📦 快速安装
 
 ```bash
-pip install xqr                   # 全功能推荐，开箱即用
+pip install xqr-z                   # 全功能推荐，开箱即用
 ```
 
 > **轻量安装**（仅生成、不需要识别解码，省掉 opencv-python）：
@@ -176,7 +176,7 @@ encode("https://example.com", "animated.gif",
 ```
 
 <p align="center">
-  <img src="assets/demo_animated.gif" width="150" alt="动态二维码演示"/>
+  <img src="https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_animated.gif" width="150" alt="动态二维码演示"/>
 </p>
 
 ### 3️⃣ 自定义颜色
@@ -208,7 +208,7 @@ encode("你好世界", terminal=True)
 ```
 
 <p align="center">
-  <img src="assets/demo_terminal.png" width="300" alt="终端二维码截图"/>
+  <img src="https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_terminal.png" width="300" alt="终端二维码截图"/>
   <br>
   <sub>在 Windows Terminal / iTerm2 中等宽终端中显示为正确二维码</sub>
 </p>
@@ -260,7 +260,7 @@ XQR.decode("qrcode.png")      # ④ 类方法
 XQR 内置完整的 **Code128B 条形码引擎**——编码器和解码器均为自研实现，**零外部依赖**。
 
 <p align="center">
-  <img src="assets/demo_barcode.png" width="500" alt="XQR 条形码演示"/>
+  <img src="https://raw.githubusercontent.com/QuantumEdgeCode/XQR/refs/heads/main/assets/assets/demo_barcode.png" width="500" alt="XQR 条形码演示"/>
   <br>
   <sub>Code128 条形码示例（module_width=3, module_height=80）</sub>
 </p>
